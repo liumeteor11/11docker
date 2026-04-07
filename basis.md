@@ -7,4 +7,6 @@
 [Linux containers in 500 lines of code](https://blog.lizzie.io/linux-containers-in-500-loc.html)
 [barco: Linux Containers From Scratch in C. | Blog | Luca Cavallin](https://www.lucavall.in/blog/barco-linux-containers-from-scratch-in-c)
 
+![](assets/basis/file-20260407144259420.png)
+
 
