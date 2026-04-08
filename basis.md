@@ -9,13 +9,13 @@
 
 ![](assets/basis/file-20260407144259420.png)
 
-|场景|推荐方案|原因|
-|---|---|---|
-|数据库数据（PostgreSQL/MySQL/Redis）|✅ Volume|需要高 IO 性能、权限隔离、Docker 自动备份/迁移|
-|应用运行时产生的日志/缓存|✅ Volume|容器专属，不污染宿主机目录结构|
-|开发时修改源代码|✅ Bind Mount|`./src:/app/src`，改完热重载，无需重新 build|
-|配置文件（nginx.conf / .env）|✅ Bind Mount|宿主机直接编辑，容器实时读取|
-|需要宿主机工具查看/备份的数据|✅ Bind Mount|路径明确，可用 `robocopy` / `rsync` / 压缩包直接操作|
+| 场景                            | 推荐方案       | 原因                                     |
+| ----------------------------- | ---------- | -------------------------------------- |
+| 数据库数据（PostgreSQL/MySQL/Redis） | Volume     | 需要高 IO 性能、权限隔离、Docker 自动备份/迁移          |
+| 应用运行时产生的日志/缓存                 | Volume     | 容器专属，不污染宿主机目录结构                        |
+| 开发时修改源代码                      | Bind Mount | `./src:/app/src`，改完热重载，无需重新 build      |
+| 配置文件（nginx.conf / .env）       | Bind Mount | 宿主机直接编辑，容器实时读取                         |
+| 需要宿主机工具查看/备份的数据               | Bind Mount | 路径明确，可用 `robocopy` / `rsync` / 压缩包直接操作 |
 
 1.简单了解 docker的功能和用法
 
