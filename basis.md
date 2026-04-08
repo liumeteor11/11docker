@@ -32,3 +32,7 @@ CMD ["echo", "Hello Docker"]
 
 ```
 然后`docker build -t hello-docker .`(-t指定名称)、`docker run --rm hello-docker`(直接--rm，容器退出后自动删除该容器)
+core-02:
+![](assets/basis/file-20260408104054595.png)
+直接执行：docker run -d --name my-nginx -p 8080:80 nginx
+过程：
