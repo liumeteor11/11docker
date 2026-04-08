@@ -21,7 +21,8 @@
 
 [furkan/dockerlings: learn docker in your terminal, with bite sized exercises](https://github.com/furkan/dockerlings)
 打算直接把这个做一遍
-core-01:![](assets/basis/file-20260408010346223.png)
+
+**core-01**:![](assets/basis/file-20260408010346223.png)
 直接修改echo后面的内容就行
 ```docker file
 # Use the emptiest possible base image
@@ -32,7 +33,17 @@ CMD ["echo", "Hello Docker"]
 
 ```
 然后`docker build -t hello-docker .`(-t指定名称)、`docker run --rm hello-docker`(直接--rm，容器退出后自动删除该容器)
-core-02:
+
+**core-02**:
 ![](assets/basis/file-20260408104054595.png)
-直接执行：docker run -d --name my-nginx -p 8080:80 nginx
-过程：
+直接执行：docker run -d --name my-nginx -p 8080:80 nginx (-d:后台运行)(可以直接run，如果找不到image就会自动pull)
+![](assets/basis/file-20260408104454329.png)
+验证结果：
+```cmd
+docker ps
+curl http://localhost:8080
+```
+![](assets/basis/file-20260408104556605.png)
+验证完成后docker stop my-nginx、docker rm my-nginx
+
+**core-03**:
