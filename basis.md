@@ -221,3 +221,26 @@ services:
       - "6379:6379"
 ```
 然后`docker compose up`(或者-d后台运行)
+
+**core-13**:
+使用docker compose构建一个two-service的容器。
+```yaml
+services:
+  redis:
+    image: redis:alpine
+    container_name: c13-redis
+
+  web:
+    build: ./app
+    container_name: c13-web
+    ports:
+      - "8013:5000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+```
+然后`docker compose up --build`
+
+**core-14**:
+multi-service compose (volumes & networks) 
