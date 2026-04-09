@@ -87,7 +87,7 @@ CMD ["python", "app.py"]
 **core-06**:
 modify dockerfile以满足要求
 `LABEL` 是给 Docker 镜像添加元数据（metadata）的指令，类似于给文件加标签
-```
+```dockerfile
 FROM m.daocloud.io/docker.io/library/python:3.12-slim
 
 # TODO: Add a LABEL with the key "org.dockerlings.author" and your name as the value.
@@ -117,3 +117,19 @@ EXPOSE $PORT
 CMD["python", "app.py"]
 ```
 
+**core-07**:
+```dockerfile
+# TODO: Start from a suitable Nginx base image.
+# A good lightweight option is nginx:stable-alpine
+
+FROM nginx:stable-alpine
+
+# TODO: Copy the static website content from the local `html` directory
+# into the correct directory inside the image where Nginx serves files.
+# The default path for Nginx web content is /usr/share/nginx/html.
+
+COPY ./html /usr/share/nginx/html(把整个文件夹复制到正确的目录)
+```
+
+**core-08**:
+介绍volume的使用
