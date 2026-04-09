@@ -162,4 +162,6 @@ INSERT 0 1:
  The Grand Budapest Hotel
 (1 row)
 ```
-可以看到数据保存了下来。
+可以看到数据保存了下来，保存在WSL2里。
+
+**core-09**:
