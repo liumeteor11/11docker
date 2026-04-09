@@ -52,8 +52,68 @@ curl http://localhost:8080
 使用docker logs查看日志并保存为logs.txt `docker logs my-logger>>logs.txt`
 
 **core-04**:
-使用docker cp在宿主机和容器间传输文件：
+使用`docker cp`在宿主机和容器间传输文件：
 `D:\dockerling\dockerlings\exercises\core-04>docker cp run-inside-container.sh c4-container:/tmp/~`
 Successfully copied 2.05kB to c4-container:/tmp/
-在容器里执行命令：
-D:\dockerling\dockerlings\exercises\core-04>docker exec c4-container sh -c "nginx -v > /tmp/container-info.txt 2>&1"`
+在容器里执行命令`docker exec`：
+`docker exec c4-container sh -c "nginx -v > /tmp/container-info.txt 2>&1"`
+
+**core-05**:
+创建一个自己的dockerfile，dockerfile is a sequence of instructions。
+`FROM python:3.9-slim`: Specifies the starting image for your build.
+`WORKDIR /app`: Sets the current directory for all subsequent commands (`COPY`, `RUN`, `CMD`). (如果不设置，那么默认为根目录)
+`COPY <source> <destination>`: Copies files from your host into the image.
+Tip: To optimize build caching, you should copy `requirements.txt` and run `pip install` before copying the rest of your application code.
+ `RUN <command>`: Executes a command during the image build. This is used for installing dependencies. `RUN pip install -r requirements.txt` 
+ `EXPOSE 5000`: Informs Docker that the application listens on this port. This is good practice for documentation.
+`CMD ["python", "app.py"]`: Provides the default command to execute when the container starts.
+```dockerfile
+FROM m.daocloud.io/docker.io/library/python:3.9-slim
+(python:3.9-slim=Debian 精简版操作系统+Python 3.9 运行环境)
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install -r requirements.txt
+
+COPY app.py .
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+```
+![](assets/basis/file-20260409110245311.png)
+
+**core-06**:
+modify dockerfile以满足要求
+`LABEL` 是给 Docker 镜像添加元数据（metadata）的指令，类似于给文件加标签
+```
+FROM m.daocloud.io/docker.io/library/python:3.12-slim
+
+# TODO: Add a LABEL with the key "org.dockerlings.author" and your name as the value.
+# For example: LABEL org.dockerlings.author="your.name@example.com"
+
+LABEL org.dockerlings.author="meteor"  (符合规范)
+
+# TODO: Set the PORT environment variable to 8000.
+
+ENV PORT=8000
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY app.py .
+
+# The application listens on the port defined by the PORT environment variable.
+# TODO: EXPOSE the port defined in the ENV instruction.
+
+EXPOSE $PORT
+
+# TODO: Set the default command to run the application.
+# The `app.py` script will automatically use the $PORT variable.
+
+CMD["python", "app.py"]
+```
+
