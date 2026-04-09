@@ -165,3 +165,46 @@ INSERT 0 1:
 可以看到数据保存了下来，保存在WSL2里。
 
 **core-09**:
+使用bind mount
+docker run -d --name c9-dev-server -p 8009:80 -v "%cd%/app:/usr/share/nginx/html:ro" nginx （使用-v <host:path>:<container:path>来执行bind mount) (cmd里，所以用%cd%获取绝对路径)（:ro表示read only）
+效果：修改宿主机app/html文件，会实时反馈在live的容器里。
+
+**core-10**:
+basic networking:bridge networks，可以让多个容器在同一网络内通信
+先创建网络`docker network create c10-network`，然后把两个container都使用这个网络运行，进行测试
+```sh
+#!/bin/bash
+set -e # Exit immediately if a command exits with a non-zero status.
+
+# This script should launch two containers on the 'c10-network'.
+# The network must be created manually first with 'docker network create c10-network'.
+
+# TODO: Run the postgres container on the network.
+# Name: c10-db
+# Image: postgres:14-alpine
+# Network: c10-network
+# Required ENV: POSTGRES_PASSWORD=mysecretpassword
+
+docker run -d \
+  --name c10-db \
+  --network c10-network \
+  postgres:14-alpine
+
+# TODO: Run the busybox container on the network.
+# Name: c10-app
+# Image: busybox
+# Network: c10-network
+# Command: sleep 3600，让容器保持运行
+
+docker run -d \
+  --name c10-app \
+  --network c10-network \
+  busybox sleep 3600
+
+echo "Containers are starting..."
+```
+
+**core-11**:
+ports and exposure
+- **`EXPOSE <port>`**: 这是一个文档说明指令。它向运行容器的人表明，容器内的应用打算监听的端口。它并不会实际打开端口或让该端口可从宿主机访问。
+- **`docker run -p <host_port>:<container_port>`**: 这是一个运行时指令。它会主动创建一条网络规则，将流量从宿主机的某个端口映射到容器内的某个端口。
