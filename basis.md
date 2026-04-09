@@ -236,11 +236,49 @@ services:
     ports:
       - "8013:5000"
     environment:
-      - REDIS_HOST=redis
-    depends_on:
+      - REDIS_HOST=redis  (为了找到redis的服务地址)
+    depends_on: (redis启动后web再启动)
       - redis
 ```
 然后`docker compose up --build`
 
 **core-14**:
-multi-service compose (volumes & networks) 
+multi-service compose (volumes & networks)，在13的基础上加入自定义的network和volume
+```yaml
+networks:
+  c14-app-net:
+
+volumes:
+  redis-data: 
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: c14-redis
+    volumes:
+      - redis-data:/data  (设置容器内redis储存数据的位置)
+    networks:
+      - c14-app-net
+
+  web:
+    build: ./app
+    container_name: c14-web
+    ports:
+      - "8014:5000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    networks:
+      - c14-app-net
+```
+
+**core-15**:
+多阶段构建，可以大幅减小最终镜像的体积。
+
+| 示例             | 基础镜像                    | 用途   | 包含内容          |
+| -------------- | ----------------------- | ---- | ------------- |
+| **Builder 阶段** | `golang:1.21` (大镜像)     | 编译代码 | SDK、编译器、源码、依赖 |
+| **运行阶段**       | `scratch` (空镜像)或alpine等 | 运行程序 | 只有编译好的二进制文件   |
+多阶段命名：使用 `AS` 关键字给阶段命名；复制文件：用 `COPY --from=阶段名` 从其他阶段复制文件。
+
