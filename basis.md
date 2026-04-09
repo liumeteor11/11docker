@@ -49,3 +49,6 @@ curl http://localhost:8080
 验证完成后docker stop my-nginx、docker rm my-nginx
 
 **core-03**:
+使用docker logs并保存为logs.txt `docker logs my-logger>>logs.txt`
+
+**core-04**:
