@@ -208,3 +208,16 @@ echo "Containers are starting..."
 ports and exposure
 - **`EXPOSE <port>`**: 这是一个文档说明指令。它向运行容器的人表明，容器内的应用打算监听的端口。它并不会实际打开端口或让该端口可从宿主机访问。
 - **`docker run -p <host_port>:<container_port>`**: 这是一个运行时指令。它会主动创建一条网络规则，将流量从宿主机的某个端口映射到容器内的某个端口。
+
+**core-12**:
+简单了解docker compose：用来定义和运行多容器的docker应用，使用YAML文件来配置应用所需的服务、网络、volumes等。
+配置一个YAML文件
+```yaml
+services:
+  redis-server:
+    image: redis:alpine
+    container_name: c12-redis
+    ports:
+      - "6379:6379"
+```
+然后`docker compose up`(或者-d后台运行)
