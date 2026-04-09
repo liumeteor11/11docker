@@ -133,3 +133,33 @@ COPY ./html /usr/share/nginx/html(把整个文件夹复制到正确的目录)
 
 **core-08**:
 介绍volume的使用
+`docker run -d --name c8-postgres -e POSTGRES_PASSWORD=meteor -v pgdata:/var/lib/postgresql/data postgres:16`
+`docker logs c8-postgres`
+
+CREATE TABLE:
+`docker exec c8-postgres psql -U postgres -d postgres -c "CREATE TABLE dvd_rentals (title TEXT);"`(postgres 是 PostgreSQL 的默认超级管理员用户名)（psql 是 PostgreSQL 的官方命令行客户端工具，用于连接和操作 PostgreSQL 数据库）
+INSERT 0 1:
+`docker exec c8-postgres psql -U postgres -d postgres -c "INSERT INTO dvd_rentals (title) VALUES ('The Grand Budapest Hotel');"`
+查看postgres在WSL2中的路径
+`docker volume inspect pgdata`
+```
+"CreatedAt": "2026-04-09T06:46:54Z",
+"Driver": "local",
+"Labels": null,
+"Mountpoint": "/var/lib/docker/volumes/pgdata/_data",
+"Name": "pgdata",
+"Options": null,
+"Scope": "local"
+}
+```
+![](assets/basis/file-20260409190236438.png)
+在停止和移除之后`docker stop c8-postgres && docker rm c8-postgres`
+重新运行一个相同参数的容器`docker run -d --name c8-postgres -e POSTGRES_PASSWORD=meteor -v pgdata:/var/lib/postgresql/data postgres:16`
+查询数据`docker exec c8-postgres psql -U postgres -d postgres -c "SELECT * FROM dvd_rentals;"`
+```
+          title
+--------------------------
+ The Grand Budapest Hotel
+(1 row)
+```
+可以看到数据保存了下来。
