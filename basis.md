@@ -49,6 +49,11 @@ curl http://localhost:8080
 验证完成后docker stop my-nginx、docker rm my-nginx
 
 **core-03**:
-使用docker logs并保存为logs.txt `docker logs my-logger>>logs.txt`
+使用docker logs查看日志并保存为logs.txt `docker logs my-logger>>logs.txt`
 
 **core-04**:
+使用docker cp在宿主机和容器间传输文件：
+`D:\dockerling\dockerlings\exercises\core-04>docker cp run-inside-container.sh c4-container:/tmp/~`
+Successfully copied 2.05kB to c4-container:/tmp/
+在容器里执行命令：
+D:\dockerling\dockerlings\exercises\core-04>docker exec c4-container sh -c "nginx -v > /tmp/container-info.txt 2>&1"`
