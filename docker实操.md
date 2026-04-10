@@ -169,6 +169,16 @@ INSERT 0 1:
 docker run -d --name c9-dev-server -p 8009:80 -v "%cd%/app:/usr/share/nginx/html:ro" nginx （使用-v <host:path>:<container:path>来执行bind mount) (cmd里，所以用%cd%获取绝对路径)（:ro表示read only）
 效果：修改宿主机app/html文件，会实时反馈在live的容器里。
 
+| 特性        | **Volume** (`-v name:/path`)                | **Bind Mount** (`-v /host/path:/container/path`) |
+| :-------- | :------------------------------------------ | :----------------------------------------------- |
+| **创建位置**  | Docker 管理的存储区域 (`/var/lib/docker/volumes/`) | 主机上的任意指定路径                                       |
+| **语法识别**  | 冒号前是**名字**（无 `/` 或 `\`）                     | 冒号前是**绝对路径**（以 `/` 或 `C:\` 开头）                   |
+| **跨平台**   | 可移植，Docker 自动处理                             | 依赖主机路径结构                                         |
+| **性能**    | 在 Linux 上原生，WSL2/Mac 有额外开销                  | 直接主机文件系统访问                                       |
+| **备份/迁移** | 用 `docker volume` 命令管理                      | 直接复制主机文件夹                                        |
+| **权限控制**  | Docker 管理权限                                 | 继承主机权限，易出权限问题                                    |
+| **适用场景**  | 数据库持久化、应用数据                                 | 开发环境代码挂载、配置文件                                    |
+
 **core-10**:
 basic networking:bridge networks，可以让多个容器在同一网络内通信
 先创建网络`docker network create c10-network`，然后把两个container都使用这个网络运行，进行测试
