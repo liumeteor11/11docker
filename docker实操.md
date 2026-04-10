@@ -7,7 +7,7 @@
 [Linux containers in 500 lines of code](https://blog.lizzie.io/linux-containers-in-500-loc.html)
 [barco: Linux Containers From Scratch in C. | Blog | Luca Cavallin](https://www.lucavall.in/blog/barco-linux-containers-from-scratch-in-c)
 
-![](assets/basis/file-20260407144259420.png)
+![](assets/docker实操/file-20260410095757648.png)
 
 | 场景                            | 推荐方案       | 原因                                     |
 | ----------------------------- | ---------- | -------------------------------------- |
@@ -24,7 +24,7 @@
 [furkan/dockerlings: learn docker in your terminal, with bite sized exercises](https://github.com/furkan/dockerlings)
 打算直接把这个做一遍
 
-**core-01**:![](assets/basis/file-20260408010346223.png)
+**core-01**:![](assets/docker实操/file-20260410095757587.png)
 直接修改echo后面的内容就行
 ```docker file
 # Use the emptiest possible base image
@@ -37,23 +37,23 @@ CMD ["echo", "Hello Docker"]
 然后`docker build -t hello-docker .`(-t指定名称)、`docker run --rm hello-docker`(直接--rm，容器退出后自动删除该容器)
 
 **core-02**:
-![](assets/basis/file-20260408104054595.png)
+![](assets/docker实操/file-20260410095757545.png)
 直接执行：docker run -d --name my-nginx -p 8080:80 nginx (-d:后台运行)(可以直接run，如果找不到image就会自动pull)
-![](assets/basis/file-20260408104454329.png)
+![](assets/docker实操/file-20260410095757523.png)
 验证结果：
 ```cmd
 docker ps
 curl http://localhost:8080
 ```
-![](assets/basis/file-20260408104556605.png)
+![](assets/docker实操/file-20260410095757497.png)
 验证完成后docker stop my-nginx、docker rm my-nginx
 
 **core-03**:
-使用docker logs查看日志并保存为logs.txt `docker logs my-logger>>logs.txt`
+使用`docker logs`查看日志并保存为logs.txt `docker logs my-logger>>logs.txt`
 
 **core-04**:
 使用`docker cp`在宿主机和容器间传输文件：
-`D:\dockerling\dockerlings\exercises\core-04>docker cp run-inside-container.sh c4-container:/tmp/~`
+`docker cp run-inside-container.sh c4-container:/tmp/~`
 Successfully copied 2.05kB to c4-container:/tmp/
 在容器里执行命令`docker exec`：
 `docker exec c4-container sh -c "nginx -v > /tmp/container-info.txt 2>&1"`
@@ -82,7 +82,7 @@ EXPOSE 5000
 
 CMD ["python", "app.py"]
 ```
-![](assets/basis/file-20260409110245311.png)
+![](assets/docker实操/file-20260410095757483.png)
 
 **core-06**:
 modify dockerfile以满足要求
@@ -152,7 +152,7 @@ INSERT 0 1:
 "Scope": "local"
 }
 ```
-![](assets/basis/file-20260409190236438.png)
+![](assets/docker实操/file-20260410095757474.png)
 在停止和移除之后`docker stop c8-postgres && docker rm c8-postgres`
 重新运行一个相同参数的容器`docker run -d --name c8-postgres -e POSTGRES_PASSWORD=meteor -v pgdata:/var/lib/postgresql/data postgres:16`
 查询数据`docker exec c8-postgres psql -U postgres -d postgres -c "SELECT * FROM dvd_rentals;"`
@@ -282,4 +282,28 @@ services:
 | **运行阶段**       | `scratch` (空镜像)或alpine等 | 运行程序 | 只有编译好的二进制文件   |
 多阶段命名：使用 `AS` 关键字给阶段命名；复制文件：用 `COPY --from=阶段名` 从其他阶段复制文件。
 You use one stage (e.g., FROM golang AS builder) to compile your code, and a second, separate stage (e.g., FROM scratch) to create the final, minimal image, copying only the compiled binary from the first stage.
+```dockerfile
+# TODO: Refactor this Dockerfile to use a multi-stage build.
+# The goal is to create a final image that is much smaller than this one.
 
+# This single stage uses the full Go SDK, resulting in a large image.
+FROM golang:1.21-alpine AS builder
+
+WORKDIR /src
+
+# Copy the source code and build the application
+COPY app/ .
+#CGO_ENABLED=0：禁用 CGO，生成静态链接的二进制文件，不依赖 C 库，适合 scratch 镜像
+RUN CGO_ENABLED=0 go build -o /app/server .
+#stage 2
+FROM scratch
+#将 /app/server 复制到当前镜像的根目录下，并命名为 /server
+COPY --from=builder /app/server /server
+# Expose the port the app runs on
+EXPOSE 8080
+
+# The command to run the executable
+CMD ["/server"]
+```
+![](assets/docker实操/file-20260410095757462.png)
+镜像体积大小从原本的278.14MB减小到了6.41MB
