@@ -281,4 +281,5 @@ services:
 | **Builder 阶段** | `golang:1.21` (大镜像)     | 编译代码 | SDK、编译器、源码、依赖 |
 | **运行阶段**       | `scratch` (空镜像)或alpine等 | 运行程序 | 只有编译好的二进制文件   |
 多阶段命名：使用 `AS` 关键字给阶段命名；复制文件：用 `COPY --from=阶段名` 从其他阶段复制文件。
+You use one stage (e.g., FROM golang AS builder) to compile your code, and a second, separate stage (e.g., FROM scratch) to create the final, minimal image, copying only the compiled binary from the first stage.
 
