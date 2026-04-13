@@ -5,7 +5,7 @@
 [codecrafters-io/build-your-own-x: Master programming by recreating your favorite technologies from scratch.](https://github.com/codecrafters-io/build-your-own-x)
 
 [Linux containers in 500 lines of code](https://blog.lizzie.io/linux-containers-in-500-loc.html)
-[barco: Linux Containers From Scratch in C. | Blog | Luca Cavallin](https://www.lucavall.in/blog/barco-linux-containers-from-scratch-in-c)
+[lucavallin/barco: Linux containers from scratch in C.](https://github.com/lucavallin/barco)
 
 ![](assets/docker实操/file-20260410095757648.png)
 
